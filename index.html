@@ -43,7 +43,7 @@
             
             /* ПРИНУДИТЕЛЬНО светлая тема для принтера */
             body { background-color: white !important; color: #1e293b !important; line-height: 1.35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            * { color: black !important; text-shadow: none !important; }
+            * { text-shadow: none !important; }
             
             .no-print { display: none !important; }
             .print-container { padding: 0 !important; max-width: 100% !important; }
@@ -73,6 +73,9 @@
             /* ОТКЛЮЧЕНИЕ АНИМАЦИЙ И ФИЛЬТРОВ ДЛЯ ПЕЧАТИ */
             .animate-fade-in { opacity: 1 !important; transform: none !important; animation: none !important; }
             .job-dimmed { opacity: 1 !important; filter: none !important; }
+            
+            /* Фикс плашек и кнопок (откат на светлый стиль) */
+            .print-light-pill { background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1 !important; }
         }
     </style>
 </head>
@@ -116,16 +119,16 @@
                         <i class="fa-solid fa-bullseye text-blue-500"></i> Professional Summary
                     </h3>
                     <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        <strong class="dark:text-white">Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong class="dark:text-white">executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
+                        <strong class="dark:text-white print:text-black">Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong class="dark:text-white print:text-black">executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
                     </p>
                     <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong class="dark:text-white">entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
+                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong class="dark:text-white print:text-black">entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
                     </p>
                     <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        Specializing in <strong class="dark:text-white">Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong class="dark:text-white">highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
+                        Specializing in <strong class="dark:text-white print:text-black">Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong class="dark:text-white print:text-black">highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
                     </p>
                     <p class="text-slate-700 dark:text-slate-200 leading-relaxed text-sm text-justify font-medium bg-slate-50 dark:bg-slate-700/50 print-bg-transparent p-3 print:p-0 rounded border-l-4 border-blue-500 print:border-l-0">
-                        To drive continuous innovation in management and architecture, I actively research <strong class="dark:text-white">state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
+                        To drive continuous innovation in management and architecture, I actively research <strong class="dark:text-white print:text-black">state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
                     </p>
                 </section>
 
@@ -145,7 +148,7 @@
                                 <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Match Systems <span class="text-slate-500 dark:text-slate-400 font-normal">(Crypto Processing & AML Platform)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Jan 2022 – Present</span>
                                 <i id="icon-job1" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform rotate-180"></i>
                             </div>
                         </button>
@@ -155,19 +158,19 @@
                                 <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
                                 <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
+                                        <strong class="dark:text-white print:text-black">Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
+                                        <strong class="dark:text-white print:text-black">Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
+                                        <strong class="dark:text-white print:text-black">Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
+                                        <strong class="dark:text-white print:text-black">Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">AI-Driven Engineering:</strong> Integrated Large Language Models (primarily Gemini) into the engineering workflow to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle across the team (ensuring human-in-the-loop verification).
+                                        <strong class="dark:text-white print:text-black">AI-Driven Engineering:</strong> Integrated Large Language Models (primarily Gemini) into the engineering workflow to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle across the team (ensuring human-in-the-loop verification).
                                     </li>
                                 </ul>
                             </div>
@@ -182,7 +185,7 @@
                                 <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">W2ai.bot <span class="text-slate-500 dark:text-slate-400 font-normal">(Messenger-based AI CRM Startup)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Oct 2023 – Present</span>
                                 <i id="icon-job2" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
@@ -192,13 +195,13 @@
                                 <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
                                 <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
+                                        <strong class="dark:text-white print:text-black">Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">AI-First Product Features:</strong> Implemented Gemini/OpenAI directly into the messenger environment for automated user onboarding, conversational sales, and instant 24/7 customer support/FAQ. Designed an AI-driven dashboard acting as a smart co-pilot for event organizers to navigate and manage the platform effortlessly.
+                                        <strong class="dark:text-white print:text-black">AI-First Product Features:</strong> Implemented Gemini/OpenAI directly into the messenger environment for automated user onboarding, conversational sales, and instant 24/7 customer support/FAQ. Designed an AI-driven dashboard acting as a smart co-pilot for event organizers to navigate and manage the platform effortlessly.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
+                                        <strong class="dark:text-white print:text-black">Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
                                     </li>
                                 </ul>
                             </div>
@@ -213,7 +216,7 @@
                                 <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Digital Verse</div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Sep 2019 – Jan 2022</span>
                                 <i id="icon-job3" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
@@ -223,13 +226,13 @@
                                 <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
                                 <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
+                                        <strong class="dark:text-white print:text-black">R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
+                                        <strong class="dark:text-white print:text-black">AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
+                                        <strong class="dark:text-white print:text-black">Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
                                     </li>
                                 </ul>
                             </div>
@@ -244,7 +247,7 @@
                                 <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Dream Team</div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Feb 2017 – Sep 2019</span>
                                 <i id="icon-job4" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
@@ -254,13 +257,13 @@
                                 <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
                                 <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
+                                        <strong class="dark:text-white print:text-black">FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
+                                        <strong class="dark:text-white print:text-black">Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white">Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
+                                        <strong class="dark:text-white print:text-black">Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
                                     </li>
                                 </ul>
                             </div>
@@ -275,7 +278,7 @@
                                 <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Various Companies <span class="text-slate-500 dark:text-slate-400 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Jun 2014 – Feb 2017</span>
                                 <i id="icon-job5" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
@@ -332,15 +335,15 @@
                     </div>
                     
                     <div class="flex flex-wrap gap-2 print:gap-1" id="tech-filters">
-                        <button onclick="toggleTech('Python')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Python</button>
-                        <button onclick="toggleTech('Golang')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Golang</button>
-                        <button onclick="toggleTech('PostgreSQL')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">PostgreSQL</button>
-                        <button onclick="toggleTech('Kafka')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Kafka</button>
-                        <button onclick="toggleTech('Solidity')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Solidity</button>
-                        <button onclick="toggleTech('Web3')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Web3</button>
-                        <button onclick="toggleTech('Java')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Java</button>
-                        <button onclick="toggleTech('Kotlin')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Kotlin</button>
-                        <button onclick="toggleTech('Swift')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Swift</button>
+                        <button onclick="toggleTech('Python')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Python</button>
+                        <button onclick="toggleTech('Golang')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Golang</button>
+                        <button onclick="toggleTech('PostgreSQL')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">PostgreSQL</button>
+                        <button onclick="toggleTech('Kafka')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Kafka</button>
+                        <button onclick="toggleTech('Solidity')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Solidity</button>
+                        <button onclick="toggleTech('Web3')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Web3</button>
+                        <button onclick="toggleTech('Java')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Java</button>
+                        <button onclick="toggleTech('Kotlin')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Kotlin</button>
+                        <button onclick="toggleTech('Swift')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Swift</button>
                     </div>
                 </section>
 
@@ -352,27 +355,27 @@
                     <ul class="space-y-3 print:space-y-2 text-sm text-slate-700 dark:text-slate-300">
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Winner:</strong> TRON Grand Hackathon 2024</div>
+                            <div><strong class="dark:text-white print:text-black">Winner:</strong> TRON Grand Hackathon 2024</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
+                            <div><strong class="dark:text-white print:text-black">Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
+                            <div><strong class="dark:text-white print:text-black">Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
+                            <div><strong class="dark:text-white print:text-black">Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-globe text-blue-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Guinness Record:</strong> "Leaders of Digital 2019"</div>
+                            <div><strong class="dark:text-white print:text-black">Guinness Record:</strong> "Leaders of Digital 2019"</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-star text-slate-400 mt-0.5"></i> 
-                            <div><strong class="dark:text-white">Top Placements:</strong> AngelHack (2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (2016).</div>
+                            <div><strong class="dark:text-white print:text-black">Top Placements:</strong> AngelHack (2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (2016).</div>
                         </li>
                     </ul>
                 </section>
@@ -383,7 +386,7 @@
                         <i class="fa-solid fa-graduation-cap text-blue-500"></i> Education
                     </h3>
                     <div class="mb-6 print:mb-4">
-                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
+                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
                         <p class="text-slate-600 dark:text-slate-400 text-xs mt-1 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
                         <p class="text-slate-500 dark:text-slate-500 text-xs mt-1">2011 – 2015</p>
                     </div>
@@ -393,11 +396,11 @@
                     </h3>
                     <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300 mb-2 print:mb-1">
                         <span class="font-semibold">English</span>
-                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Full Professional (B2/C1)</span>
+                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs print-light-pill">Full Professional (B2/C1)</span>
                     </div>
                     <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300">
                         <span class="font-semibold">Russian</span>
-                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Native</span>
+                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs print-light-pill">Native</span>
                     </div>
                 </section>
 
@@ -409,7 +412,7 @@
     <script>
         // 1. Темная Тема
         // Проверяем сохраненную тему или системные настройки
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMatchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -424,6 +427,20 @@
                 localStorage.theme = 'dark';
             }
         }
+
+        // Фикс для печати: принудительно отключаем темную тему прямо перед печатью и возвращаем после
+        let wasDarkMode = false;
+        window.addEventListener('beforeprint', () => {
+            wasDarkMode = document.documentElement.classList.contains('dark');
+            if (wasDarkMode) {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        window.addEventListener('afterprint', () => {
+            if (wasDarkMode) {
+                document.documentElement.classList.add('dark');
+            }
+        });
 
         // 2. Аккордеон опыта работы
         function toggleAccordion(jobId) {
