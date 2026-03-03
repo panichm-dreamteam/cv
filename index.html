@@ -6,13 +6,33 @@
     <title>Maksim Panich - CTO Resume</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Включаем поддержку темной темы по классу
+        }
+    </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; transition: background-color 0.3s, color 0.3s; }
+        .dark body { background-color: #0f172a; color: #e2e8f0; }
         
+        /* Анимации появления (Fade-in-up) */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+
+        /* Интерактивный Tech Stack */
+        .job-card { transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease; }
+        .job-dimmed { opacity: 0.3; filter: grayscale(100%); }
+
         /* Стили для идеальной печати в PDF */
         @media print {
             /* Задаем одинаковые поля для КАЖДОЙ страницы */
@@ -21,66 +41,66 @@
             /* Глобально уменьшаем масштаб всего резюме */
             html { font-size: 11px !important; }
             
-            body { 
-                background-color: white !important; 
-                line-height: 1.35 !important; 
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .no-print { display: none !important; }
+            /* ПРИНУДИТЕЛЬНО светлая тема для принтера */
+            body { background-color: white !important; color: #1e293b !important; line-height: 1.35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            * { color: black !important; text-shadow: none !important; }
             
-            .print-container { 
-                padding: 0 !important; 
-                max-width: 100% !important; 
-            }
+            .no-print { display: none !important; }
+            .print-container { padding: 0 !important; max-width: 100% !important; }
             
             /* Убираем тени, границы и внутренние отступы */
             .print-shadow-none { box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 1.5rem !important; }
             .print-bg-transparent { background-color: transparent !important; }
             
-            /* ФИКС СЕТКИ: Классические флоаты (float) - это единственный 100% стабильный способ для многостраничного PDF в Chrome */
+            /* ФИКС СЕТКИ: Классические флоаты */
             .print-grid { display: block !important; }
             .print-grid::after { content: ""; display: table; clear: both; }
             .print-col-left { float: left !important; width: 66% !important; padding-right: 2rem !important; }
             .print-col-right { float: right !important; width: 34% !important; }
             
-            /* ПРИНУДИТЕЛЬНО разрешаем элементам разрываться (убирает огромные пустые дыры) */
+            /* ПРИНУДИТЕЛЬНО разрешаем элементам разрываться */
             .avoid-break, section, div, p, ul { page-break-inside: auto !important; break-inside: auto !important; }
-            
-            /* Но запрещаем разрывать конкретные пункты списков (буллиты) и заголовки */
             li { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 0.35rem !important; }
             h1, h2, h3, h4, h5 { page-break-after: avoid !important; break-after: avoid !important; }
             
             a { text-decoration: none !important; color: #2563eb !important; }
 
-            /* ПРИНУДИТЕЛЬНОЕ РАСКРЫТИЕ АККОРДЕОНА ПРИ ПЕЧАТИ */
+            /* ПРИНУДИТЕЛЬНОЕ РАСКРЫТИЕ АККОРДЕОНА */
             .accordion-content { display: block !important; }
             .accordion-icon { display: none !important; }
             .accordion-header { pointer-events: none !important; cursor: default !important; }
+
+            /* ОТКЛЮЧЕНИЕ АНИМАЦИЙ И ФИЛЬТРОВ ДЛЯ ПЕЧАТИ */
+            .animate-fade-in { opacity: 1 !important; transform: none !important; animation: none !important; }
+            .job-dimmed { opacity: 1 !important; filter: none !important; }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-blue-200 selection:text-blue-900">
+<body class="antialiased selection:bg-blue-200 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-200 transition-colors duration-300">
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print-container">
         
-        <!-- Кнопка печати (не видна при печати) -->
-        <div class="text-right mb-4 no-print">
-            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
-                <i class="fa-solid fa-print"></i> Save as PDF
+        <!-- Кнопки управления (не видны при печати) -->
+        <div class="flex justify-end gap-3 mb-6 no-print animate-fade-in">
+            <button onclick="toggleTheme()" id="theme-toggle" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 w-10 h-10 rounded-lg flex items-center justify-center transition-colors shadow-sm">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:block"></i>
+            </button>
+            <button onclick="window.print()" class="bg-slate-800 dark:bg-blue-600 hover:bg-slate-700 dark:hover:bg-blue-500 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
+                <i class="fa-solid fa-print"></i> Save PDF
             </button>
         </div>
 
         <!-- HEADER -->
-        <header class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-6 print-shadow-none print-bg-transparent">
-            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-2">Maksim Panich</h1>
-            <h2 class="text-xl font-medium text-blue-600 mb-5 print:mb-3 uppercase tracking-wide text-sm">Chief Technology Officer (CTO) | Lead Solutions Architect</h2>
+        <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 mb-6 print-shadow-none print-bg-transparent animate-fade-in delay-100">
+            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Maksim Panich</h1>
+            <h2 class="text-xl font-medium text-blue-600 dark:text-blue-400 mb-5 print:mb-3 uppercase tracking-wide text-sm">Chief Technology Officer (CTO) | Lead Solutions Architect</h2>
             
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600 font-medium print:gap-y-1">
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600 dark:text-slate-300 font-medium print:gap-y-1">
                 <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-slate-400"></i> Tel Aviv, Israel (Open to Relocation / Remote)</div>
                 <div class="flex items-center gap-2"><i class="fa-solid fa-passport text-slate-400"></i> Citizenship: Israel</div>
-                <a href="mailto:panichmax@gmail.com" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 underline transition-colors"><i class="fa-solid fa-envelope text-slate-400"></i> panichmax@gmail.com</a>
-                <a href="https://www.linkedin.com/in/panich-maxim/" target="_blank" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 underline transition-colors"><i class="fa-brands fa-linkedin text-slate-400"></i> linkedin.com/in/panich-maxim</a>
+                <a href="mailto:panichmax@gmail.com" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"><i class="fa-solid fa-envelope text-slate-400"></i> panichmax@gmail.com</a>
+                <a href="https://www.linkedin.com/in/panich-maxim/" target="_blank" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"><i class="fa-brands fa-linkedin text-slate-400"></i> linkedin.com/in/panich-maxim</a>
             </div>
         </header>
 
@@ -88,181 +108,183 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 print-grid">
             
             <!-- ЛЕВАЯ КОЛОНКА (2/3 ширины) - Опыт работы -->
-            <div class="lg:col-span-2 space-y-6 print:space-y-4 print-col-left">
+            <div class="lg:col-span-2 space-y-6 print:space-y-4 print-col-left animate-fade-in delay-200">
                 
                 <!-- SUMMARY -->
-                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
                         <i class="fa-solid fa-bullseye text-blue-500"></i> Professional Summary
                     </h3>
-                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        <strong>Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong>executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
+                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        <strong class="dark:text-white">Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong class="dark:text-white">executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
                     </p>
-                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong>entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
+                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong class="dark:text-white">entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
                     </p>
-                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        Specializing in <strong>Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong>highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
+                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        Specializing in <strong class="dark:text-white">Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong class="dark:text-white">highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
                     </p>
-                    <p class="text-slate-700 leading-relaxed text-sm text-justify font-medium bg-slate-50 print-bg-transparent p-3 print:p-0 rounded border-l-4 border-blue-500 print:border-l-0">
-                        To drive continuous innovation in management and architecture, I actively research <strong>state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
+                    <p class="text-slate-700 dark:text-slate-200 leading-relaxed text-sm text-justify font-medium bg-slate-50 dark:bg-slate-700/50 print-bg-transparent p-3 print:p-0 rounded border-l-4 border-blue-500 print:border-l-0">
+                        To drive continuous innovation in management and architecture, I actively research <strong class="dark:text-white">state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
                     </p>
                 </section>
 
                 <!-- EXPERIENCE -->
-                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-6 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-briefcase text-blue-500"></i> Professional Experience
-                    </h3>
+                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent">
+                    <div class="flex justify-between items-end border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-6 print:mb-3">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-blue-500"></i> Professional Experience
+                        </h3>
+                    </div>
 
-                    <!-- Job 1 (Открыт по умолчанию) -->
-                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
-                        <button onclick="toggleAccordion('job1')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                    <!-- Job 1 -->
+                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,Golang,PostgreSQL,Kafka">
+                        <button onclick="toggleAccordion('job1')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
                             <div>
-                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Chief Technology Officer (CTO) / Team Lead</h4>
-                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Match Systems <span class="text-slate-500 font-normal">(Crypto Processing & AML Platform)</span></div>
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO) / Team Lead</h4>
+                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Match Systems <span class="text-slate-500 dark:text-slate-400 font-normal">(Crypto Processing & AML Platform)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
                                 <i id="icon-job1" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform rotate-180"></i>
                             </div>
                         </button>
                         
                         <div id="content-job1" class="accordion-content block px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
-                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
+                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
+                                        <strong class="dark:text-white">Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
+                                        <strong class="dark:text-white">Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure, segmented network architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
+                                        <strong class="dark:text-white">Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
+                                        <strong class="dark:text-white">Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Product Ownership & Analysis:</strong> Acted as interim PO and Lead Systems Analyst, translating complex business requirements into technical roadmaps and prioritizing the product backlog.
+                                        <strong class="dark:text-white">AI-Driven Engineering:</strong> Integrated Large Language Models (primarily Gemini) into the engineering workflow to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle across the team (ensuring human-in-the-loop verification).
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Job 2 (Свернут по умолчанию) -->
-                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
-                        <button onclick="toggleAccordion('job2')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                    <!-- Job 2 -->
+                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,PostgreSQL,Kafka">
+                        <button onclick="toggleAccordion('job2')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
                             <div>
-                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Founder & Lead Architect <span class="text-slate-500 font-normal text-sm group-hover:text-blue-500 transition-colors">(Independent R&D)</span></h4>
-                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">W2ai.bot <span class="text-slate-500 font-normal">(Messenger-based AI CRM Startup)</span></div>
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Lead Architect <span class="text-slate-500 dark:text-slate-400 font-normal text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">(Independent R&D)</span></h4>
+                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">W2ai.bot <span class="text-slate-500 dark:text-slate-400 font-normal">(Messenger-based AI CRM Startup)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
                                 <i id="icon-job2" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
                         
                         <div id="content-job2" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
-                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
+                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
+                                        <strong class="dark:text-white">Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>AI Integration & Methodologies:</strong> Applied large language models (primarily Gemini) to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle via AI-assisted engineering frameworks (ensuring human-in-the-loop verification).
+                                        <strong class="dark:text-white">AI-First Product Features:</strong> Implemented Gemini/OpenAI directly into the messenger environment for automated user onboarding, conversational sales, and instant 24/7 customer support/FAQ. Designed an AI-driven dashboard acting as a smart co-pilot for event organizers to navigate and manage the platform effortlessly.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
+                                        <strong class="dark:text-white">Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Job 3 (Свернут по умолчанию) -->
-                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
-                        <button onclick="toggleAccordion('job3')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                    <!-- Job 3 -->
+                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,Solidity,Web3">
+                        <button onclick="toggleAccordion('job3')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
                             <div>
-                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Founder & Chief Executive Officer (CEO)</h4>
-                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Digital Verse</div>
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Chief Executive Officer (CEO)</h4>
+                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Digital Verse</div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
                                 <i id="icon-job3" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
                         
                         <div id="content-job3" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
-                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
+                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
+                                        <strong class="dark:text-white">R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
+                                        <strong class="dark:text-white">AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
+                                        <strong class="dark:text-white">Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Job 4 (Свернут по умолчанию) -->
-                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
-                        <button onclick="toggleAccordion('job4')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                    <!-- Job 4 -->
+                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Golang,PostgreSQL,Solidity,Web3">
+                        <button onclick="toggleAccordion('job4')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
                             <div>
-                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Chief Technology Officer (CTO)</h4>
-                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Dream Team</div>
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO)</h4>
+                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Dream Team</div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
                                 <i id="icon-job4" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
                         
                         <div id="content-job4" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
-                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
+                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
+                                        <strong class="dark:text-white">FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
+                                        <strong class="dark:text-white">Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
                                     </li>
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong>Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
+                                        <strong class="dark:text-white">Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Job 5 (Свернут по умолчанию) -->
-                    <div class="border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
-                        <button onclick="toggleAccordion('job5')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                    <!-- Job 5 -->
+                    <div class="job-card border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Java,Kotlin,Swift,Python,Golang">
+                        <button onclick="toggleAccordion('job5')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
                             <div>
-                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Senior Mobile & Backend Developer</h4>
-                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Various Companies <span class="text-slate-500 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Senior Mobile & Backend Developer</h4>
+                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Various Companies <span class="text-slate-500 dark:text-slate-400 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
                             </div>
                             <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
+                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
                                 <i id="icon-job5" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
                             </div>
                         </button>
                         
                         <div id="content-job5" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
-                                <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
+                                <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0 mt-3 print:mt-1.5">
                                     <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed robust backend architectures using Python and Golang.</li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed scalable backend architectures using Python and Golang.</li>
                                 </ul>
                             </div>
                         </div>
@@ -272,102 +294,106 @@
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА (1/3 ширины) - Скиллы, Образование, Награды -->
-            <div class="space-y-6 print:space-y-4 print-col-right">
+            <div class="space-y-6 print:space-y-4 print-col-right animate-fade-in delay-300">
                 
                 <!-- CORE COMPETENCIES -->
-                <section class="bg-slate-800 text-white rounded-2xl shadow-sm p-8 print-shadow-none print:text-slate-900 print-bg-transparent">
-                    <h3 class="text-lg font-bold border-b-2 border-slate-600 print:border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                <section class="bg-slate-800 text-white rounded-2xl shadow-sm p-8 print-shadow-none print:text-slate-900 print-bg-transparent avoid-break border border-transparent dark:border-slate-700">
+                    <h3 class="text-lg font-bold border-b-2 border-slate-600 dark:border-slate-700 print:border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
                         <i class="fa-solid fa-layer-group text-blue-400 print:text-blue-500"></i> Core Competencies
                     </h3>
                     
                     <div class="space-y-4 print:space-y-3">
                         <div>
-                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Executive & Leadership</h4>
-                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Tech Strategy, Cross-functional Team Building (Team of 20+), Budgeting & FinOps, Agile/Scrum, Product Ownership (PO), Business & Systems Analysis, Technical Project Management.</p>
+                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Executive & Leadership</h4>
+                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Tech Strategy, Cross-functional Team Building (Team of 20+), Budgeting & FinOps, Agile/Scrum, Product Ownership (PO), Business & Systems Analysis, Technical Project Management.</p>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Architecture & FinTech</h4>
-                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">CEX & Crypto Payment Processing, Proprietary AML Blockchain Systems & Risk-Scoring Engines, Fiat-to-Crypto Bridges, Smart Contracts, Real-Time Node Monitoring & Transaction Processing.</p>
+                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Architecture & FinTech</h4>
+                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">CEX & Crypto Payment Processing, Proprietary AML Blockchain Systems & Risk-Scoring Engines, Fiat-to-Crypto Bridges, Smart Contracts, Real-Time Node Monitoring & Transaction Processing.</p>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Information Security & Infrastructure</h4>
-                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Secure Architecture Design, Digital Asset Protection & Network Segmentation, Penetration Testing Management, Vulnerability Assessment, AWS / GCP, Docker, Kubernetes, CI/CD pipelines.</p>
+                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Information Security & Infrastructure</h4>
+                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Secure Architecture Design, Digital Asset Protection, Penetration Testing Management, Vulnerability Assessment, AWS / GCP, Docker, Kubernetes, CI/CD pipelines.</p>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">AI & Emerging Tech</h4>
-                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Generative AI (Gemini) for Systems Architecture & SDLC Acceleration, Video/Voice Synthesis (GANs, Autoencoders), Prompt Engineering, Messenger-based AI CRM Platforms.</p>
+                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">AI & Emerging Tech</h4>
+                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Generative AI (Gemini) for Systems Architecture & SDLC Acceleration, Video/Voice Synthesis (GANs, Autoencoders), Prompt Engineering, Messenger-based AI CRM Platforms.</p>
                         </div>
                     </div>
                 </section>
 
-                <!-- TECH STACK -->
-                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-code text-blue-500"></i> Tech Stack
-                    </h3>
-                    <div class="flex flex-wrap gap-2 print:gap-1">
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Python</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Golang</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">PostgreSQL</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Kafka</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Solidity</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Web3</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Java</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Kotlin</span>
-                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Swift</span>
+                <!-- TECH STACK (Интерактивный) -->
+                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
+                    <div class="flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-5 print:mb-3">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-code text-blue-500"></i> Tech Stack
+                        </h3>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest no-print">Click to filter</span>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 print:gap-1" id="tech-filters">
+                        <button onclick="toggleTech('Python')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Python</button>
+                        <button onclick="toggleTech('Golang')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Golang</button>
+                        <button onclick="toggleTech('PostgreSQL')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">PostgreSQL</button>
+                        <button onclick="toggleTech('Kafka')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Kafka</button>
+                        <button onclick="toggleTech('Solidity')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Solidity</button>
+                        <button onclick="toggleTech('Web3')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Web3</button>
+                        <button onclick="toggleTech('Java')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Java</button>
+                        <button onclick="toggleTech('Kotlin')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Kotlin</button>
+                        <button onclick="toggleTech('Swift')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 print:bg-transparent text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 print:border-slate-300 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600">Swift</button>
                     </div>
                 </section>
 
                 <!-- AWARDS -->
-                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
                         <i class="fa-solid fa-trophy text-blue-500"></i> Awards
                     </h3>
-                    <ul class="space-y-3 print:space-y-2 text-sm text-slate-700">
+                    <ul class="space-y-3 print:space-y-2 text-sm text-slate-700 dark:text-slate-300">
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong>Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
+                            <div><strong class="dark:text-white">Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong>Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
+                            <div><strong class="dark:text-white">Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong>Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
+                            <div><strong class="dark:text-white">Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-globe text-blue-500 mt-0.5"></i> 
-                            <div><strong>Guinness Record / Winner:</strong> "Leaders of Digital 2019"</div>
+                            <div><strong class="dark:text-white">Guinness Record:</strong> "Leaders of Digital 2019"</div>
                         </li>
                         <li class="flex items-start gap-3 print:gap-2">
                             <i class="fa-solid fa-star text-slate-400 mt-0.5"></i> 
-                            <div><strong>Top Placements:</strong> AngelHack (FinTech 2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (AI, Helsinki 2016).</div>
+                            <div><strong class="dark:text-white">Top Placements:</strong> AngelHack (2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (2016).</div>
                         </li>
                     </ul>
                 </section>
 
                 <!-- EDUCATION & LANGUAGES -->
-                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
                         <i class="fa-solid fa-graduation-cap text-blue-500"></i> Education
                     </h3>
                     <div class="mb-6 print:mb-4">
-                        <h4 class="font-bold text-slate-800 text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
-                        <p class="text-slate-600 text-xs mt-1 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
-                        <p class="text-slate-500 text-xs mt-1">2011 – 2015</p>
+                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs mt-1 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
+                        <p class="text-slate-500 dark:text-slate-500 text-xs mt-1">2011 – 2015</p>
                     </div>
 
-                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
                         <i class="fa-solid fa-language text-blue-500"></i> Languages
                     </h3>
-                    <div class="flex justify-between items-center text-sm text-slate-700 mb-2 print:mb-1">
+                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300 mb-2 print:mb-1">
                         <span class="font-semibold">English</span>
-                        <span class="text-slate-500 bg-slate-100 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Full Professional (B2/C1)</span>
+                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Full Professional (B2/C1)</span>
                     </div>
-                    <div class="flex justify-between items-center text-sm text-slate-700">
+                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300">
                         <span class="font-semibold">Russian</span>
-                        <span class="text-slate-500 bg-slate-100 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Native</span>
+                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Native</span>
                     </div>
                 </section>
 
@@ -375,23 +401,83 @@
         </div>
     </div>
 
-    <!-- JavaScript для Аккордеона -->
+    <!-- JavaScript логика -->
     <script>
+        // 1. Темная Тема
+        // Проверяем сохраненную тему или системные настройки
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMatchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        // 2. Аккордеон опыта работы
         function toggleAccordion(jobId) {
             const content = document.getElementById(`content-${jobId}`);
             const icon = document.getElementById(`icon-${jobId}`);
             
             if (content.classList.contains('hidden')) {
-                // Открываем
                 content.classList.remove('hidden');
                 content.classList.add('block');
                 icon.classList.add('rotate-180');
             } else {
-                // Закрываем
                 content.classList.remove('block');
                 content.classList.add('hidden');
                 icon.classList.remove('rotate-180');
             }
+        }
+
+        // 3. Интерактивный Tech Stack (Фильтрация)
+        let activeTechs = new Set();
+
+        function toggleTech(techName) {
+            const buttons = document.querySelectorAll('.tech-btn');
+            
+            // Обработка кнопки
+            buttons.forEach(btn => {
+                if (btn.innerText === techName) {
+                    if (activeTechs.has(techName)) {
+                        activeTechs.delete(techName);
+                        // Снимаем активный стиль
+                        btn.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                    } else {
+                        activeTechs.add(techName);
+                        // Добавляем активный стиль
+                        btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                    }
+                }
+            });
+
+            // Обновление списка карточек опыта
+            const jobs = document.querySelectorAll('.job-card');
+            
+            jobs.forEach(job => {
+                if (activeTechs.size === 0) {
+                    // Если фильтров нет - показываем всё
+                    job.classList.remove('job-dimmed');
+                    return;
+                }
+
+                const jobTechs = job.dataset.techs ? job.dataset.techs.split(',') : [];
+                // Проверяем, есть ли ХОТЯ БЫ ОДНА выбранная технология в этой работе
+                const hasMatch = Array.from(activeTechs).some(activeTech => jobTechs.includes(activeTech));
+                
+                if (hasMatch) {
+                    job.classList.remove('job-dimmed');
+                } else {
+                    job.classList.add('job-dimmed');
+                }
+            });
         }
     </script>
 </body>
