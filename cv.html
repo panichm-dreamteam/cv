@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksim Panich - CTO Resume</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        /* Стили для идеальной печати в PDF */
+        @media print {
+            /* 1. Убираем системные колонтитулы браузера (дату, URL, заголовок) */
+            @page { size: A4; margin: 0mm !important; } 
+            
+            /* 2. Глобально уменьшаем масштаб всего резюме, чтобы оно плотно влезло на 1-2 страницы */
+            html { font-size: 11px !important; }
+            
+            body { 
+                background-color: white !important; 
+                line-height: 1.35 !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print { display: none !important; }
+            
+            /* 3. Задаем искусственные поля страницы, так как @page margin теперь 0 */
+            .print-container { 
+                padding: 12mm 15mm !important; 
+                max-width: 100% !important; 
+            }
+            
+            /* Убираем тени, границы и внутренние отступы */
+            .print-shadow-none { box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 1.5rem !important; }
+            .print-bg-transparent { background-color: transparent !important; }
+            
+            /* ФИКС СЕТКИ: Flexbox переносит разрывы страниц намного лучше, чем Grid */
+            .print-grid { display: flex !important; flex-direction: row !important; align-items: flex-start !important; justify-content: space-between !important; gap: 0 !important;}
+            .print-col-left { width: 68% !important; padding-right: 2rem !important; }
+            .print-col-right { width: 32% !important; }
+            
+            /* Разрешаем элементам разрываться, чтобы не было гигантских пустых дыр на полстраницы */
+            section, div, p, ul { page-break-inside: auto; break-inside: auto; }
+            /* Но запрещаем разрывать конкретные пункты списков (буллиты) и заголовки */
+            li { page-break-inside: avoid; break-inside: avoid; margin-bottom: 0.35rem !important; }
+            h1, h2, h3, h4, h5 { page-break-after: avoid; break-after: avoid; }
+            
+            a { text-decoration: none !important; color: #2563eb !important; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print-container">
+        
+        <!-- Кнопка печати (не видна при печати) -->
+        <div class="text-right mb-4 no-print">
+            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
+                <i class="fa-solid fa-print"></i> Save as PDF
+            </button>
+        </div>
+
+        <!-- HEADER -->
+        <header class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-6 print-shadow-none print-bg-transparent">
+            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-2">Maksim Panich</h1>
+            <h2 class="text-xl font-medium text-blue-600 mb-5 print:mb-3 uppercase tracking-wide text-sm">Chief Technology Officer (CTO) | Lead Solutions Architect</h2>
+            
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600 font-medium print:gap-y-1">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-slate-400"></i> Tel Aviv, Israel (Open to Relocation / Remote)</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-passport text-slate-400"></i> Citizenship: Israel</div>
+                <a href="mailto:panichmax@gmail.com" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 underline transition-colors"><i class="fa-solid fa-envelope text-slate-400"></i> panichmax@gmail.com</a>
+                <a href="https://www.linkedin.com/in/panich-maxim/" target="_blank" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 underline transition-colors"><i class="fa-brands fa-linkedin text-slate-400"></i> linkedin.com/in/panich-maxim</a>
+            </div>
+        </header>
+
+        <!-- MAIN GRID (Две колонки) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 print-grid">
+            
+            <!-- ЛЕВАЯ КОЛОНКА (2/3 ширины) - Опыт работы -->
+            <div class="lg:col-span-2 space-y-6 print:space-y-4 print-col-left">
+                
+                <!-- SUMMARY -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-blue-500"></i> Professional Summary
+                    </h3>
+                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        <strong>Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong>executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
+                    </p>
+                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong>entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
+                    </p>
+                    <p class="text-slate-700 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
+                        Specializing in <strong>Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong>highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
+                    </p>
+                    <p class="text-slate-700 leading-relaxed text-sm text-justify font-medium bg-slate-50 print-bg-transparent p-3 print:p-0 rounded border-l-4 border-blue-500 print:border-l-0">
+                        To drive continuous innovation in management and architecture, I actively research <strong>state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
+                    </p>
+                </section>
+
+                <!-- EXPERIENCE -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-6 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-briefcase text-blue-500"></i> Professional Experience
+                    </h3>
+
+                    <!-- Job 1 -->
+                    <div class="mb-8 print:mb-5">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-base font-bold text-slate-900">Chief Technology Officer (CTO) / Team Lead</h4>
+                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
+                        </div>
+                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Match Systems <span class="text-slate-500 font-normal">(Crypto Processing & AML Platform)</span></div>
+                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
+                        
+                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure, segmented network architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Product Ownership & Analysis:</strong> Acted as interim PO and Lead Systems Analyst, translating complex business requirements into technical roadmaps and prioritizing the product backlog.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 2 -->
+                    <div class="mb-8 print:mb-5">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-base font-bold text-slate-900">Founder & Lead Architect <span class="text-slate-500 font-normal text-sm">(Independent R&D Project)</span></h4>
+                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
+                        </div>
+                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">W2ai.bot <span class="text-slate-500 font-normal">(Messenger-based AI CRM Startup)</span></div>
+                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
+                        
+                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>AI Integration & Methodologies:</strong> Applied large language models (primarily Gemini) to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle via AI-assisted engineering frameworks (ensuring human-in-the-loop verification).
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 3 -->
+                    <div class="mb-8 print:mb-5">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-base font-bold text-slate-900">Founder & Chief Executive Officer (CEO)</h4>
+                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
+                        </div>
+                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Digital Verse</div>
+                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
+                        
+                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 4 -->
+                    <div class="mb-8 print:mb-5">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-base font-bold text-slate-900">Chief Technology Officer (CTO)</h4>
+                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
+                        </div>
+                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Dream Team</div>
+                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
+                        
+                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
+                            </li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                <strong>Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 5 -->
+                    <div>
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-base font-bold text-slate-900">Senior Mobile & Backend Developer</h4>
+                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
+                        </div>
+                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Various Companies <span class="text-slate-500 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
+                        <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0 mt-3 print:mt-1.5">
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
+                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed robust backend architectures using Python and Golang.</li>
+                        </ul>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА (1/3 ширины) - Скиллы, Образование, Награды -->
+            <div class="space-y-6 print:space-y-4 print-col-right">
+                
+                <!-- CORE COMPETENCIES -->
+                <section class="bg-slate-800 text-white rounded-2xl shadow-sm p-8 print-shadow-none print:text-slate-900 print-bg-transparent">
+                    <h3 class="text-lg font-bold border-b-2 border-slate-600 print:border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-blue-400 print:text-blue-500"></i> Core Competencies
+                    </h3>
+                    
+                    <div class="space-y-4 print:space-y-3">
+                        <div>
+                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Executive & Leadership</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Tech Strategy, Cross-functional Team Building (Team of 20+), Budgeting & FinOps, Agile/Scrum, Product Ownership (PO), Business & Systems Analysis, Technical Project Management.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Architecture & FinTech</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">CEX & Crypto Payment Processing, Proprietary AML Blockchain Systems & Risk-Scoring Engines, Fiat-to-Crypto Bridges, Smart Contracts, Real-Time Node Monitoring & Transaction Processing.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">Information Security & Infrastructure</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Secure Architecture Design, Digital Asset Protection & Network Segmentation, Penetration Testing Management, Vulnerability Assessment, AWS / GCP, Docker, Kubernetes, CI/CD pipelines.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-300 print:text-blue-600 text-sm mb-1">AI & Emerging Tech</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Generative AI (Gemini) for Systems Architecture & SDLC Acceleration, Video/Voice Synthesis (GANs, Autoencoders), Prompt Engineering, Messenger-based AI CRM Platforms.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TECH STACK -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-code text-blue-500"></i> Tech Stack
+                    </h3>
+                    <div class="flex flex-wrap gap-2 print:gap-1">
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Python</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Golang</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">PostgreSQL</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Kafka</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Solidity</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Web3</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Java</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Kotlin</span>
+                        <span class="px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 print:bg-transparent text-slate-700 text-xs rounded-md font-semibold border border-slate-200 print:border-slate-300">Swift</span>
+                    </div>
+                </section>
+
+                <!-- AWARDS -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-blue-500"></i> Awards
+                    </h3>
+                    <ul class="space-y-3 print:space-y-2 text-sm text-slate-700">
+                        <li class="flex items-start gap-3 print:gap-2">
+                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
+                            <div><strong>Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
+                        </li>
+                        <li class="flex items-start gap-3 print:gap-2">
+                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
+                            <div><strong>Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
+                        </li>
+                        <li class="flex items-start gap-3 print:gap-2">
+                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
+                            <div><strong>Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
+                        </li>
+                        <li class="flex items-start gap-3 print:gap-2">
+                            <i class="fa-solid fa-globe text-blue-500 mt-0.5"></i> 
+                            <div><strong>Guinness Record / Winner:</strong> "Leaders of Digital 2019"</div>
+                        </li>
+                        <li class="flex items-start gap-3 print:gap-2">
+                            <i class="fa-solid fa-star text-slate-400 mt-0.5"></i> 
+                            <div><strong>Top Placements:</strong> AngelHack (FinTech 2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (AI, Helsinki 2016).</div>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- EDUCATION & LANGUAGES -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 print-shadow-none print-bg-transparent">
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-blue-500"></i> Education
+                    </h3>
+                    <div class="mb-6 print:mb-4">
+                        <h4 class="font-bold text-slate-800 text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
+                        <p class="text-slate-600 text-xs mt-1 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
+                        <p class="text-slate-500 text-xs mt-1">2011 – 2015</p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-slate-900 border-b-2 border-slate-100 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-language text-blue-500"></i> Languages
+                    </h3>
+                    <div class="flex justify-between items-center text-sm text-slate-700 mb-2 print:mb-1">
+                        <span class="font-semibold">English</span>
+                        <span class="text-slate-500 bg-slate-100 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Full Professional (B2/C1)</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-slate-700">
+                        <span class="font-semibold">Russian</span>
+                        <span class="text-slate-500 bg-slate-100 print:bg-transparent print:border print:border-slate-300 px-2 py-0.5 rounded text-xs">Native</span>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
