@@ -15,10 +15,10 @@
         
         /* Стили для идеальной печати в PDF */
         @media print {
-            /* 1. Убираем системные колонтитулы браузера (дату, URL, заголовок) */
-            @page { size: A4; margin: 0mm !important; } 
+            /* Задаем одинаковые поля для КАЖДОЙ страницы */
+            @page { size: A4; margin: 15mm !important; } 
             
-            /* 2. Глобально уменьшаем масштаб всего резюме, чтобы оно плотно влезло на 1-2 страницы */
+            /* Глобально уменьшаем масштаб всего резюме */
             html { font-size: 11px !important; }
             
             body { 
@@ -29,9 +29,8 @@
             }
             .no-print { display: none !important; }
             
-            /* 3. Задаем искусственные поля страницы, так как @page margin теперь 0 */
             .print-container { 
-                padding: 12mm 15mm !important; 
+                padding: 0 !important; 
                 max-width: 100% !important; 
             }
             
@@ -39,18 +38,25 @@
             .print-shadow-none { box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 1.5rem !important; }
             .print-bg-transparent { background-color: transparent !important; }
             
-            /* ФИКС СЕТКИ: Flexbox переносит разрывы страниц намного лучше, чем Grid */
-            .print-grid { display: flex !important; flex-direction: row !important; align-items: flex-start !important; justify-content: space-between !important; gap: 0 !important;}
-            .print-col-left { width: 68% !important; padding-right: 2rem !important; }
-            .print-col-right { width: 32% !important; }
+            /* ФИКС СЕТКИ: Классические флоаты (float) - это единственный 100% стабильный способ для многостраничного PDF в Chrome */
+            .print-grid { display: block !important; }
+            .print-grid::after { content: ""; display: table; clear: both; }
+            .print-col-left { float: left !important; width: 66% !important; padding-right: 2rem !important; }
+            .print-col-right { float: right !important; width: 34% !important; }
             
-            /* Разрешаем элементам разрываться, чтобы не было гигантских пустых дыр на полстраницы */
-            section, div, p, ul { page-break-inside: auto; break-inside: auto; }
+            /* ПРИНУДИТЕЛЬНО разрешаем элементам разрываться (убирает огромные пустые дыры) */
+            .avoid-break, section, div, p, ul { page-break-inside: auto !important; break-inside: auto !important; }
+            
             /* Но запрещаем разрывать конкретные пункты списков (буллиты) и заголовки */
-            li { page-break-inside: avoid; break-inside: avoid; margin-bottom: 0.35rem !important; }
-            h1, h2, h3, h4, h5 { page-break-after: avoid; break-after: avoid; }
+            li { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 0.35rem !important; }
+            h1, h2, h3, h4, h5 { page-break-after: avoid !important; break-after: avoid !important; }
             
             a { text-decoration: none !important; color: #2563eb !important; }
+
+            /* ПРИНУДИТЕЛЬНОЕ РАСКРЫТИЕ АККОРДЕОНА ПРИ ПЕЧАТИ */
+            .accordion-content { display: block !important; }
+            .accordion-icon { display: none !important; }
+            .accordion-header { pointer-events: none !important; cursor: default !important; }
         }
     </style>
 </head>
@@ -109,111 +115,157 @@
                         <i class="fa-solid fa-briefcase text-blue-500"></i> Professional Experience
                     </h3>
 
-                    <!-- Job 1 -->
-                    <div class="mb-8 print:mb-5">
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-base font-bold text-slate-900">Chief Technology Officer (CTO) / Team Lead</h4>
-                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
-                        </div>
-                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Match Systems <span class="text-slate-500 font-normal">(Crypto Processing & AML Platform)</span></div>
-                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
+                    <!-- Job 1 (Открыт по умолчанию) -->
+                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
+                        <button onclick="toggleAccordion('job1')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Chief Technology Officer (CTO) / Team Lead</h4>
+                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Match Systems <span class="text-slate-500 font-normal">(Crypto Processing & AML Platform)</span></div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jan 2022 – Present</span>
+                                <i id="icon-job1" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform rotate-180"></i>
+                            </div>
+                        </button>
                         
-                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure, segmented network architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Product Ownership & Analysis:</strong> Acted as interim PO and Lead Systems Analyst, translating complex business requirements into technical roadmaps and prioritizing the product backlog.
-                            </li>
-                        </ul>
+                        <div id="content-job1" class="accordion-content block px-5 pb-5 print:p-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
+                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure, segmented network architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Product Ownership & Analysis:</strong> Acted as interim PO and Lead Systems Analyst, translating complex business requirements into technical roadmaps and prioritizing the product backlog.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Job 2 -->
-                    <div class="mb-8 print:mb-5">
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-base font-bold text-slate-900">Founder & Lead Architect <span class="text-slate-500 font-normal text-sm">(Independent R&D Project)</span></h4>
-                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
-                        </div>
-                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">W2ai.bot <span class="text-slate-500 font-normal">(Messenger-based AI CRM Startup)</span></div>
-                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
+                    <!-- Job 2 (Свернут по умолчанию) -->
+                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
+                        <button onclick="toggleAccordion('job2')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Founder & Lead Architect <span class="text-slate-500 font-normal text-sm group-hover:text-blue-500 transition-colors">(Independent R&D)</span></h4>
+                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">W2ai.bot <span class="text-slate-500 font-normal">(Messenger-based AI CRM Startup)</span></div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Oct 2023 – Present</span>
+                                <i id="icon-job2" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
+                            </div>
+                        </button>
                         
-                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>AI Integration & Methodologies:</strong> Applied large language models (primarily Gemini) to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle via AI-assisted engineering frameworks (ensuring human-in-the-loop verification).
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
-                            </li>
-                        </ul>
+                        <div id="content-job2" class="accordion-content hidden px-5 pb-5 print:p-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
+                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>AI Integration & Methodologies:</strong> Applied large language models (primarily Gemini) to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle via AI-assisted engineering frameworks (ensuring human-in-the-loop verification).
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Job 3 -->
-                    <div class="mb-8 print:mb-5">
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-base font-bold text-slate-900">Founder & Chief Executive Officer (CEO)</h4>
-                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
-                        </div>
-                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Digital Verse</div>
-                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
+                    <!-- Job 3 (Свернут по умолчанию) -->
+                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
+                        <button onclick="toggleAccordion('job3')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Founder & Chief Executive Officer (CEO)</h4>
+                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Digital Verse</div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Sep 2019 – Jan 2022</span>
+                                <i id="icon-job3" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
+                            </div>
+                        </button>
                         
-                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
-                            </li>
-                        </ul>
+                        <div id="content-job3" class="accordion-content hidden px-5 pb-5 print:p-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
+                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Job 4 -->
-                    <div class="mb-8 print:mb-5">
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-base font-bold text-slate-900">Chief Technology Officer (CTO)</h4>
-                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
-                        </div>
-                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Dream Team</div>
-                        <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
+                    <!-- Job 4 (Свернут по умолчанию) -->
+                    <div class="mb-4 print:mb-5 border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
+                        <button onclick="toggleAccordion('job4')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Chief Technology Officer (CTO)</h4>
+                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Dream Team</div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Feb 2017 – Sep 2019</span>
+                                <i id="icon-job4" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
+                            </div>
+                        </button>
                         
-                        <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
-                            </li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                <strong>Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
-                            </li>
-                        </ul>
+                        <div id="content-job4" class="accordion-content hidden px-5 pb-5 print:p-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
+                                <p class="text-sm italic text-slate-600 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
+                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
+                                    </li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
+                                        <strong>Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Job 5 -->
-                    <div>
-                        <div class="flex justify-between items-start mb-1">
-                            <h4 class="text-base font-bold text-slate-900">Senior Mobile & Backend Developer</h4>
-                            <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
+                    <!-- Job 5 (Свернут по умолчанию) -->
+                    <div class="border border-slate-200 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white print-bg-transparent avoid-break transition-all">
+                        <button onclick="toggleAccordion('job5')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 transition-colors print:bg-transparent group cursor-pointer">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Senior Mobile & Backend Developer</h4>
+                                <div class="text-blue-600 font-medium text-sm mt-1 print:mt-0">Various Companies <span class="text-slate-500 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                <span class="text-xs font-semibold bg-slate-100 print:bg-transparent print:border print:border-slate-300 text-slate-600 px-3 py-1 rounded-full whitespace-nowrap">Jun 2014 – Feb 2017</span>
+                                <i id="icon-job5" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
+                            </div>
+                        </button>
+                        
+                        <div id="content-job5" class="accordion-content hidden px-5 pb-5 print:p-0">
+                            <div class="pt-3 print:pt-1 border-t border-slate-100 print:border-none">
+                                <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0">
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
+                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed robust backend architectures using Python and Golang.</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="text-blue-600 font-medium text-sm mb-2 print:mb-1">Various Companies <span class="text-slate-500 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
-                        <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 list-none ml-0 pl-0 mt-3 print:mt-1.5">
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
-                            <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed robust backend architectures using Python and Golang.</li>
-                        </ul>
                     </div>
 
                 </section>
@@ -323,5 +375,24 @@
         </div>
     </div>
 
+    <!-- JavaScript для Аккордеона -->
+    <script>
+        function toggleAccordion(jobId) {
+            const content = document.getElementById(`content-${jobId}`);
+            const icon = document.getElementById(`icon-${jobId}`);
+            
+            if (content.classList.contains('hidden')) {
+                // Открываем
+                content.classList.remove('hidden');
+                content.classList.add('block');
+                icon.classList.add('rotate-180');
+            } else {
+                // Закрываем
+                content.classList.remove('block');
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
 </body>
 </html>
