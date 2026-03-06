@@ -8,17 +8,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // Включаем поддержку темной темы по классу
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
         }
     </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; transition: background-color 0.3s, color 0.3s; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+            transition: background-color 0.3s, color 0.3s; 
+            overflow-x: hidden;
+        }
         .dark body { background-color: #0f172a; color: #e2e8f0; }
         
+        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Plus Jakarta Sans', sans-serif; }
+
         /* Анимации появления (Fade-in-up) */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(15px); }
@@ -29,379 +45,562 @@
         .delay-200 { animation-delay: 200ms; }
         .delay-300 { animation-delay: 300ms; }
 
+        /* Мягкое "дыхание" фоновых пятен */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+        .animate-float { animation: float 7s ease-in-out infinite; }
+        .animate-float-delayed { animation: float 9s ease-in-out infinite 2s; }
+
         /* Интерактивный Tech Stack */
-        .job-card { transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease; }
-        .job-dimmed { opacity: 0.3; filter: grayscale(100%); }
+        .job-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .job-card:hover { transform: translateY(-2px); }
+        .job-dimmed { opacity: 0.3; filter: grayscale(100%); transform: scale(0.98); }
+        .job-dimmed:hover { transform: scale(0.98); }
+
+        /* Стеклянный эффект для карточек */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        /* Динамические фильтры ролей */
+        .active-focus {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .comp-item { transition: opacity 0.4s ease, filter 0.4s ease; }
 
         /* Стили для идеальной печати в PDF */
         @media print {
-            /* Задаем одинаковые поля для КАЖДОЙ страницы */
             @page { size: A4; margin: 15mm !important; } 
-            
-            /* Глобально уменьшаем масштаб всего резюме */
             html { font-size: 11px !important; }
-            
-            /* ПРИНУДИТЕЛЬНО светлая тема для принтера */
             body { background-color: white !important; color: #1e293b !important; line-height: 1.35 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            * { text-shadow: none !important; }
+            * { text-shadow: none !important; box-shadow: none !important; filter: none !important; backdrop-filter: none !important; }
             
             .no-print { display: none !important; }
             .print-container { padding: 0 !important; max-width: 100% !important; }
             
-            /* Убираем тени, границы и внутренние отступы */
-            .print-shadow-none { box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 1.5rem !important; }
+            .print-shadow-none { border: none !important; padding: 0 !important; margin-bottom: 1.5rem !important; }
             .print-bg-transparent { background-color: transparent !important; }
             
-            /* ФИКС СЕТКИ: Классические флоаты */
             .print-grid { display: block !important; }
             .print-grid::after { content: ""; display: table; clear: both; }
             .print-col-left { float: left !important; width: 66% !important; padding-right: 2rem !important; }
             .print-col-right { float: right !important; width: 34% !important; }
             
-            /* ПРИНУДИТЕЛЬНО разрешаем элементам разрываться */
             .avoid-break, section, div, p, ul { page-break-inside: auto !important; break-inside: auto !important; }
             li { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 0.35rem !important; }
             h1, h2, h3, h4, h5 { page-break-after: avoid !important; break-after: avoid !important; }
             
             a { text-decoration: none !important; color: #2563eb !important; }
 
-            /* ПРИНУДИТЕЛЬНОЕ РАСКРЫТИЕ АККОРДЕОНА */
             .accordion-content { display: block !important; }
             .accordion-icon { display: none !important; }
             .accordion-header { pointer-events: none !important; cursor: default !important; }
 
-            /* ОТКЛЮЧЕНИЕ АНИМАЦИЙ И ФИЛЬТРОВ ДЛЯ ПЕЧАТИ */
             .animate-fade-in { opacity: 1 !important; transform: none !important; animation: none !important; }
-            .job-dimmed { opacity: 1 !important; filter: none !important; }
+            .animate-float, .animate-float-delayed { animation: none !important; transform: none !important; }
+            .job-dimmed { opacity: 1 !important; filter: none !important; transform: none !important; }
             
-            /* Фикс плашек и кнопок (откат на светлый стиль) */
+            /* Сброс приглушения компетенций при печати (чтобы все читалось) */
+            .comp-item { opacity: 1 !important; filter: none !important; }
+
             .print-light-pill { background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1 !important; }
+            .print-no-border { border: none !important; padding-left: 0 !important; }
+            .glass-card { background: transparent !important; border-color: transparent !important; }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-blue-200 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-200 transition-colors duration-300">
+<body class="antialiased selection:bg-blue-200 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-200 transition-colors duration-300 relative">
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print-container">
+    <!-- Фоновые декоративные элементы (Блики) - добавлена плавная анимация "дыхания" -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10 no-print">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 dark:bg-blue-600/10 blur-[100px] animate-float"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-400/20 dark:bg-indigo-600/10 blur-[100px] animate-float-delayed"></div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print-container relative z-10">
         
-        <!-- Кнопки управления (не видны при печати) -->
-        <div class="flex justify-end gap-3 mb-6 no-print animate-fade-in">
-            <button onclick="toggleTheme()" id="theme-toggle" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 w-10 h-10 rounded-lg flex items-center justify-center transition-colors shadow-sm">
+        <!-- Верхняя панель управления (Только Кнопки темы и печати) -->
+        <div class="flex justify-end gap-3 mb-6 no-print animate-fade-in z-50 relative">
+            <button onclick="toggleTheme()" id="theme-toggle" class="glass-card border border-white/20 dark:border-slate-700/50 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm">
                 <i class="fa-solid fa-moon dark:hidden"></i>
                 <i class="fa-solid fa-sun hidden dark:block"></i>
             </button>
-            <button onclick="window.print()" class="bg-slate-800 dark:bg-blue-600 hover:bg-slate-700 dark:hover:bg-blue-500 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
+            <button onclick="window.print()" class="bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 text-white hover:scale-105 px-5 py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-slate-900/20 dark:shadow-blue-900/20 inline-flex items-center gap-2">
                 <i class="fa-solid fa-print"></i> Save PDF
             </button>
         </div>
 
         <!-- HEADER -->
-        <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 mb-6 print-shadow-none print-bg-transparent animate-fade-in delay-100">
-            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Maxim Panich</h1>
-            <h2 class="text-xl font-medium text-blue-600 dark:text-blue-400 mb-5 print:mb-3 uppercase tracking-wide text-sm">Chief Technology Officer (CTO) | Lead Solutions Architect</h2>
-            
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600 dark:text-slate-300 font-medium print:gap-y-1">
-                <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-slate-400"></i> Tel Aviv, Israel (Open to Relocation / Remote)</div>
-                <div class="flex items-center gap-2"><i class="fa-solid fa-passport text-slate-400"></i> Citizenship: Israel</div>
-                <a href="mailto:panichmax@gmail.com" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"><i class="fa-solid fa-envelope text-slate-400"></i> panichmax@gmail.com</a>
-                <a href="https://www.linkedin.com/in/panich-maxim/" target="_blank" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"><i class="fa-brands fa-linkedin text-slate-400"></i> linkedin.com/in/panich-maxim</a>
-                <a href="https://t.me/panichm" target="_blank" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"><i class="fa-brands fa-telegram text-slate-400"></i> https://t.me/panichm</a>
+        <header class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 sm:p-10 mb-8 print-shadow-none print-bg-transparent animate-fade-in delay-100">
+            <div class="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center">
+                
+                <div class="w-full">
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 tracking-tight mb-2 print:text-black">Maxim Panich</h1>
+                    <!-- Динамический подзаголовок -->
+                    <h2 id="dynamic-subtitle" class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-5 print:mb-3 tracking-wide text-sm transition-opacity duration-300">CHIEF TECHNOLOGY OFFICER (CTO) <span class="text-slate-300 dark:text-slate-600 mx-2">|</span> LEAD SOLUTIONS ARCHITECT</h2>
+                    
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600 dark:text-slate-300 font-medium print:gap-y-1">
+                        <!-- Контакты: заменено на эффект блика, убран поворот -->
+                        <div class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors group cursor-default">
+                            <div class="relative overflow-hidden w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center print:bg-transparent print:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-solid fa-location-dot text-slate-400 group-hover:text-blue-500 transition-colors relative z-10"></i>
+                            </div> Tel Aviv, Israel
+                        </div>
+                        <div class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors group cursor-default">
+                            <div class="relative overflow-hidden w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center print:bg-transparent print:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-solid fa-passport text-slate-400 group-hover:text-blue-500 transition-colors relative z-10"></i>
+                            </div> Citizenship: Israel
+                        </div>
+                        <a href="mailto:panichmax@gmail.com" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+                            <div class="relative overflow-hidden w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center print:bg-transparent print:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-solid fa-envelope text-slate-400 group-hover:text-blue-500 transition-colors relative z-10"></i>
+                            </div> panichmax@gmail.com
+                        </a>
+                        <a href="https://www.linkedin.com/in/panich-maxim/" target="_blank" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+                            <div class="relative overflow-hidden w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center print:bg-transparent print:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-brands fa-linkedin text-slate-400 group-hover:text-blue-500 transition-colors relative z-10"></i>
+                            </div> linkedin.com/in/panich-maxim
+                        </a>
+                        <a href="https://t.me/panichm" target="_blank" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+                            <div class="relative overflow-hidden w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 flex items-center justify-center print:bg-transparent print:w-auto transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-brands fa-telegram text-slate-400 group-hover:text-blue-500 transition-colors relative z-10"></i>
+                            </div> t.me/panichm
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
         <!-- MAIN GRID (Две колонки) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 print-grid">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 print-grid">
             
             <!-- ЛЕВАЯ КОЛОНКА (2/3 ширины) - Опыт работы -->
-            <div class="lg:col-span-2 space-y-6 print:space-y-4 print-col-left animate-fade-in delay-200">
+            <div class="lg:col-span-2 space-y-6 md:space-y-8 print:space-y-4 print-col-left animate-fade-in delay-200">
                 
                 <!-- SUMMARY -->
-                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-bullseye text-blue-500"></i> Professional Summary
+                <!-- Добавлен эффект блика для заголовка -->
+                <section class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 print-shadow-none print-bg-transparent avoid-break group">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-5 print:mb-2 uppercase tracking-wide text-sm flex items-center gap-3">
+                        <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                            <i class="fa-solid fa-bullseye relative z-10"></i>
+                        </div>
+                        Professional Summary
                     </h3>
-                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        <strong class="dark:text-white print:text-black">Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong class="dark:text-white print:text-black">executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
-                    </p>
-                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong class="dark:text-white print:text-black">entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
-                    </p>
-                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5 text-justify">
-                        Specializing in <strong class="dark:text-white print:text-black">Information Security (InfoSec)</strong> within the cryptocurrency sector, I possess deep expertise in building <strong class="dark:text-white print:text-black">highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML)</strong> blockchain analytics platforms. 
-                    </p>
-                    <p class="text-slate-700 dark:text-slate-200 leading-relaxed text-sm text-justify font-medium bg-slate-50 dark:bg-slate-700/50 print-bg-transparent p-3 print:p-0 rounded border-l-4 border-blue-500 print:border-l-0">
-                        To drive continuous innovation in management and architecture, I actively research <strong class="dark:text-white print:text-black">state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
-                    </p>
+                    
+                    <!-- ДИНАМИЧЕСКИЕ БЛОКИ SUMMARY (Убран text-justify для естественных пробелов) -->
+                    <div id="summary-cto" class="summary-block block animate-fade-in">
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            <strong class="dark:text-white print:text-black">Visionary engineering leader and CTO</strong> with 10+ years in the tech industry. For the past 5 years, my core focus has been on <strong class="dark:text-white print:text-black">executive management, scaling cross-functional engineering teams, and high-level architecture</strong>. 
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            This strategic leadership is deeply rooted in my hands-on software engineering background, providing me with a comprehensive technical understanding across the <strong class="dark:text-white print:text-black">entire product lifecycle</strong> (Backend, Frontend, Mobile, DevOps, ML, and QA). 
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-4 print:mb-1.5">
+                            Specializing in <strong class="dark:text-white print:text-black">Information Security (InfoSec) within the cryptocurrency sector</strong>, I possess deep expertise in building highly secure CEX ecosystems, crypto payment processing, and proprietary Anti-Money Laundering (AML) blockchain analytics platforms. 
+                        </p>
+                    </div>
+
+                    <div id="summary-infosec" class="summary-block hidden animate-fade-in">
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            <strong class="dark:text-white print:text-black">Engineering leader and Solutions Architect</strong> with a strong 10+ year background and a deep specialization in <strong class="dark:text-white print:text-black">FinTech, Web3, and Cryptocurrency security</strong>. My core focus is on designing bulletproof architectures and safeguarding digital assets in high-risk environments.
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            I possess deep hands-on expertise in developing proprietary <strong class="dark:text-white print:text-black">Anti-Money Laundering (AML) blockchain analytical systems</strong> from scratch. This includes real-time node monitoring, custom risk-scoring algorithms, and compliance enforcement across BTC, ETH, and TRON networks.
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-4 print:mb-1.5">
+                            My technical background allows me to successfully implement robust security protocols for enterprise crypto-fiat gateways, managing infrastructure security, zero-trust deployment pipelines, and overseeing rigorous penetration testing for CEX ecosystems.
+                        </p>
+                    </div>
+
+                    <div id="summary-po" class="summary-block hidden animate-fade-in">
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            <strong class="dark:text-white print:text-black">Tech-savvy Product Owner and Executive Leader</strong> with a proven track record of taking complex digital products from 0 to 1. My strong software engineering background allows me to seamlessly <strong class="dark:text-white print:text-black">bridge the gap between technical architecture and business objectives</strong>.
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3 print:mb-1.5">
+                            I specialize in prioritizing feature roadmaps, analyzing market fits, and driving product delivery across <strong class="dark:text-white print:text-black">FinTech, Web3, and SaaS sectors</strong>. I have successfully scaled complete ecosystems, including B2B API gateways, unified management dashboards, and native B2C messenger applications.
+                        </p>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-4 print:mb-1.5">
+                            By leveraging continuous customer feedback and deep systems analysis, I transform business requirements into agile delivery pipelines, ensuring my cross-functional teams build <strong class="dark:text-white print:text-black">highly scalable, user-centric, and revenue-generating platforms</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Универсальный AI-абзац, который виден всегда -->
+                    <div class="bg-blue-50/50 dark:bg-slate-800/50 rounded-xl p-4 border border-blue-100 dark:border-slate-700 print:border-none print:p-0 print:bg-transparent mt-2 group/ai transition-colors hover:bg-blue-100/50 dark:hover:bg-slate-700/50">
+                        <p class="text-slate-700 dark:text-slate-200 leading-relaxed text-sm">
+                            <i class="fa-solid fa-lightbulb text-yellow-500 mr-2 no-print transition-all duration-300 group-hover/ai:scale-125 group-hover/ai:drop-shadow-[0_0_8px_rgba(234,179,8,0.6)] inline-block"></i>
+                            To drive continuous innovation in management and architecture, I actively research <strong class="dark:text-white print:text-black">state-of-the-art Generative AI</strong>, developing proprietary frameworks to correctly synergize AI with business operations and engineering methodologies.
+                        </p>
+                    </div>
                 </section>
 
                 <!-- EXPERIENCE -->
-                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent">
-                    <div class="flex justify-between items-end border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-6 print:mb-3">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-briefcase text-blue-500"></i> Professional Experience
+                <section class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 print-shadow-none print-bg-transparent group">
+                    <div class="border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-6 print:mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm flex items-center gap-3">
+                            <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-solid fa-briefcase relative z-10"></i>
+                            </div>
+                            Professional Experience
                         </h3>
                     </div>
 
-                    <!-- Job 1 -->
-                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,Golang,PostgreSQL,Kafka">
-                        <button onclick="toggleAccordion('job1')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
-                            <div>
-                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO) / Team Lead</h4>
-                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Match Systems <span class="text-slate-500 dark:text-slate-400 font-normal">(Crypto Processing & AML Platform)</span></div>
+                    <!-- TIMELINE WRAPPER -->
+                    <div class="relative pl-6 sm:pl-8 border-l-2 border-slate-200 dark:border-slate-700 print-no-border space-y-6">
+
+                        <!-- Job 1 -->
+                        <div class="job-card relative group/card border border-slate-200/60 dark:border-slate-700 print:border-none rounded-2xl print:rounded-none bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 print-bg-transparent avoid-break shadow-sm hover:shadow-md" data-techs="Python,Golang,PostgreSQL,Kafka">
+                            <div class="absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full bg-blue-500 ring-4 ring-blue-50 dark:ring-slate-900 print:hidden z-10 transition-transform duration-300 group-hover/card:scale-125">
+                                <div class="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-60"></div>
                             </div>
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Jan 2022 – Present</span>
-                                <i id="icon-job1" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform rotate-180"></i>
-                            </div>
-                        </button>
-                        
-                        <div id="content-job1" class="accordion-content block px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
-                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">AI-Driven Engineering:</strong> Integrated Large Language Models (primarily Gemini) into the engineering workflow to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle across the team (ensuring human-in-the-loop verification).
-                                    </li>
-                                </ul>
+                            
+                            <button onclick="toggleAccordion('job1')" class="accordion-header w-full text-left px-5 py-5 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-start transition-colors print:bg-transparent group cursor-pointer rounded-t-2xl">
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO) / Team Lead</h4>
+                                    <!-- Чистое выравнивание в одну строку всегда -->
+                                    <div class="mt-1.5 print:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">Match Systems</span>
+                                        <span class="text-slate-300 dark:text-slate-600 text-[10px]">•</span>
+                                        <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">Crypto Processing & AML Platform</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                    <span class="text-xs font-bold bg-slate-900 dark:bg-slate-700 text-white dark:text-slate-200 px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm print-light-pill">Jan 2022 – Present</span>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <i id="icon-job1" class="accordion-icon fa-solid fa-chevron-down text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 transform rotate-180"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <div id="content-job1" class="accordion-content block px-5 pb-6 print:p-0">
+                                <div class="pt-4 print:pt-1 border-t border-slate-100 dark:border-slate-700/50 print:border-none">
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 print:mb-1.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg print:p-0 print:bg-transparent border border-slate-100 dark:border-slate-700 print:border-none">Led the technical vision and end-to-end development of an enterprise-grade crypto payment gateway and blockchain analytics platform.</p>
+                                    <ul class="space-y-3 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Architected from Scratch (Crypto-Fiat Ecosystem):</strong> Designed and deployed a highly scalable, enterprise-grade crypto processing ecosystem for Centralized Exchanges (CEX). Successfully evolved the platform into a comprehensive crypto-fiat ecosystem featuring a robust B2B API, unified B2B/B2C management dashboards, a native B2C Telegram bot wallet, and fiat card integrations linked directly to blockchain assets.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Advanced AML/Compliance System:</strong> Developed a proprietary AML blockchain analytical system from scratch, featuring custom risk-scoring algorithms. Built robust blockchain node infrastructure for real-time transaction monitoring and data processing across BTC, ETH, and TRON networks. Delivered a comprehensive web interface for transaction graph analysis and a scalable API with built-in billing capabilities.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Information Security & Infrastructure:</strong> Spearheaded comprehensive security protocols for the crypto-fiat ecosystem. Designed secure architectures to safeguard digital assets and user data. Managed infrastructure security initiatives, penetration testing pipelines, and continuous vulnerability assessments.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Team Building & Leadership:</strong> Assembled and currently manage a full cross-functional engineering team of 20+ people (Backend, Frontend, DevOps, QA, Design), establishing engineering culture, code review standards, and agile delivery pipelines.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">AI-Driven Engineering:</strong> Integrated Large Language Models (primarily Gemini) into the engineering workflow to accelerate business/systems analysis, architecture design, and optimize the software development lifecycle across the team (ensuring human-in-the-loop verification).
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Job 2 -->
-                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,PostgreSQL,Kafka">
-                        <button onclick="toggleAccordion('job2')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
-                            <div>
-                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Lead Architect <span class="text-slate-500 dark:text-slate-400 font-normal text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">(Independent R&D)</span></h4>
-                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">W2ai.bot <span class="text-slate-500 dark:text-slate-400 font-normal">(Messenger-based AI CRM Startup)</span></div>
-                            </div>
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Oct 2023 – Present</span>
-                                <i id="icon-job2" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
-                            </div>
-                        </button>
-                        
-                        <div id="content-job2" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
-                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">AI-First Product Features:</strong> Implemented Gemini/OpenAI directly into the messenger environment for automated user onboarding, conversational sales, and instant 24/7 customer support/FAQ. Designed an AI-driven dashboard acting as a smart co-pilot for event organizers to navigate and manage the platform effortlessly.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
-                                    </li>
-                                </ul>
+                        <!-- Job 2 -->
+                        <div class="job-card relative group/card border border-slate-200/60 dark:border-slate-700 print:border-none rounded-2xl print:rounded-none bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 print-bg-transparent avoid-break shadow-sm hover:shadow-md" data-techs="Python,PostgreSQL,Kafka">
+                            <div class="absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 ring-4 ring-slate-50 dark:ring-slate-900 print:hidden z-10 transition-all duration-300 group-hover/card:border-blue-500 group-hover/card:bg-blue-50 dark:group-hover/card:bg-blue-900/30 group-hover/card:scale-110"></div>
+                            
+                            <button onclick="toggleAccordion('job2')" class="accordion-header w-full text-left px-5 py-5 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-start transition-colors print:bg-transparent group cursor-pointer rounded-t-2xl">
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Lead Architect</h4>
+                                    <div class="mt-1.5 print:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">W2ai.bot</span>
+                                        <span class="text-slate-300 dark:text-slate-600 text-[10px]">•</span>
+                                        <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">Messenger-based AI CRM Startup</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                    <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg whitespace-nowrap print-light-pill border border-slate-200 dark:border-slate-600">Oct 2023 – Present</span>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <i id="icon-job2" class="accordion-icon fa-solid fa-chevron-down text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 transform"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <div id="content-job2" class="accordion-content hidden px-5 pb-6 print:p-0">
+                                <div class="pt-4 print:pt-1 border-t border-slate-100 dark:border-slate-700/50 print:border-none">
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 print:mb-1.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg print:p-0 print:bg-transparent border border-slate-100 dark:border-slate-700 print:border-none">Bootstrapped a highly adaptable B2B SaaS platform focused on business automation.</p>
+                                    <ul class="space-y-3 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Platform Development:</strong> Architected an automated, messenger-native CRM system (initially implemented and successfully deployed for Telegram Messenger) currently utilized in Ed-Tech and Event Ticketing sectors.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">AI-First Product Features:</strong> Implemented Gemini/OpenAI directly into the messenger environment for automated user onboarding, conversational sales, and instant 24/7 customer support/FAQ. Designed an AI-driven dashboard acting as a smart co-pilot for event organizers to navigate and manage the platform effortlessly.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Payments:</strong> Built seamless checkout flows within the messenger utilizing advanced crypto and fiat payment gateways.
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Job 3 -->
-                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Python,Solidity,Web3">
-                        <button onclick="toggleAccordion('job3')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
-                            <div>
-                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Chief Executive Officer (CEO)</h4>
-                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Digital Verse</div>
-                            </div>
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Sep 2019 – Jan 2022</span>
-                                <i id="icon-job3" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
-                            </div>
-                        </button>
-                        
-                        <div id="content-job3" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
-                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
-                                    </li>
-                                </ul>
+                        <!-- Job 3 -->
+                        <div class="job-card relative group/card border border-slate-200/60 dark:border-slate-700 print:border-none rounded-2xl print:rounded-none bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 print-bg-transparent avoid-break shadow-sm hover:shadow-md" data-techs="Python,Solidity,Web3">
+                            <div class="absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 ring-4 ring-slate-50 dark:ring-slate-900 print:hidden z-10 transition-all duration-300 group-hover/card:border-blue-500 group-hover/card:bg-blue-50 dark:group-hover/card:bg-blue-900/30 group-hover/card:scale-110"></div>
+                            
+                            <button onclick="toggleAccordion('job3')" class="accordion-header w-full text-left px-5 py-5 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-start transition-colors print:bg-transparent group cursor-pointer rounded-t-2xl">
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Founder & Chief Executive Officer (CEO)</h4>
+                                    <div class="mt-1.5 print:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">Digital Verse</span>
+                                        <span class="text-slate-300 dark:text-slate-600 text-[10px]">•</span>
+                                        <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">Generative AI & Synthetic Media</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                    <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg whitespace-nowrap print-light-pill border border-slate-200 dark:border-slate-600">Sep 2019 – Jan 2022</span>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <i id="icon-job3" class="accordion-icon fa-solid fa-chevron-down text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 transform"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <div id="content-job3" class="accordion-content hidden px-5 pb-6 print:p-0">
+                                <div class="pt-4 print:pt-1 border-t border-slate-100 dark:border-slate-700/50 print:border-none">
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 print:mb-1.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg print:p-0 print:bg-transparent border border-slate-100 dark:border-slate-700 print:border-none">Led a deep-tech startup focused on video and voice synthesis using advanced Generative AI.</p>
+                                    <ul class="space-y-3 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">R&D Leadership & Funding:</strong> Directed the R&D department, pioneering new synthetic media technologies, and successfully secured multiple tech grants to fund development.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">AI & Machine Learning:</strong> Architected and deployed complex AI pipelines including Faceswap technologies, Lip-sync, GANs, and Autoencoders.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Blockchain Integration:</strong> Developed smart contracts for NFT ecosystems, bridging AI-generated content with Web3 infrastructure.
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Job 4 -->
-                    <div class="job-card mb-4 print:mb-5 border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Golang,PostgreSQL,Solidity,Web3">
-                        <button onclick="toggleAccordion('job4')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
-                            <div>
-                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO)</h4>
-                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Dream Team</div>
-                            </div>
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Feb 2017 – Sep 2019</span>
-                                <i id="icon-job4" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
-                            </div>
-                        </button>
-                        
-                        <div id="content-job4" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
-                                <p class="text-sm italic text-slate-600 dark:text-slate-400 mb-3 print:mb-1.5">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
-                                <ul class="space-y-2.5 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
-                                    </li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-blue-500 before:font-bold">
-                                        <strong class="dark:text-white print:text-black">Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
-                                    </li>
-                                </ul>
+                        <!-- Job 4 -->
+                        <div class="job-card relative group/card border border-slate-200/60 dark:border-slate-700 print:border-none rounded-2xl print:rounded-none bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 print-bg-transparent avoid-break shadow-sm hover:shadow-md" data-techs="Golang,PostgreSQL,Solidity,Web3">
+                            <div class="absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 ring-4 ring-slate-50 dark:ring-slate-900 print:hidden z-10 transition-all duration-300 group-hover/card:border-blue-500 group-hover/card:bg-blue-50 dark:group-hover/card:bg-blue-900/30 group-hover/card:scale-110"></div>
+                            
+                            <button onclick="toggleAccordion('job4')" class="accordion-header w-full text-left px-5 py-5 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-start transition-colors print:bg-transparent group cursor-pointer rounded-t-2xl">
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Chief Technology Officer (CTO)</h4>
+                                    <div class="mt-1.5 print:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">Dream Team</span>
+                                        <span class="text-slate-300 dark:text-slate-600 text-[10px]">•</span>
+                                        <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">Blockchain & FinTech Solutions</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                    <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg whitespace-nowrap print-light-pill border border-slate-200 dark:border-slate-600">Feb 2017 – Sep 2019</span>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <i id="icon-job4" class="accordion-icon fa-solid fa-chevron-down text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 transform"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <div id="content-job4" class="accordion-content hidden px-5 pb-6 print:p-0">
+                                <div class="pt-4 print:pt-1 border-t border-slate-100 dark:border-slate-700/50 print:border-none">
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 print:mb-1.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg print:p-0 print:bg-transparent border border-slate-100 dark:border-slate-700 print:border-none">Directed a cross-functional technical team developing blockchain solutions and backend architectures.</p>
+                                    <ul class="space-y-3 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0">
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">FinTech & Crypto:</strong> Provided end-to-end technical support and secure architecture design for Centralized Cryptocurrency Exchanges (CEX), ICOs, and Token Funds.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Backend Leadership:</strong> Managed the development lifecycle for Mobile (Android & iOS) and Backend (Golang) ecosystems across multiple startup initiatives.
+                                        </li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-blue-500 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">
+                                            <strong class="text-slate-900 dark:text-white print:text-black">Blockchain:</strong> Developed foundational smart contracts utilizing Solidity and Web3 for various gaming and ICO projects.
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Job 5 -->
-                    <div class="job-card border border-slate-200 dark:border-slate-700 print:border-none rounded-xl print:rounded-none overflow-hidden bg-white dark:bg-slate-800 print-bg-transparent avoid-break transition-all" data-techs="Java,Kotlin,Swift,Python,Golang">
-                        <button onclick="toggleAccordion('job5')" class="accordion-header w-full text-left px-5 py-4 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors print:bg-transparent group cursor-pointer">
-                            <div>
-                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Senior Mobile & Backend Developer</h4>
-                                <div class="text-blue-600 dark:text-blue-400 font-medium text-sm mt-1 print:mt-0">Various Companies <span class="text-slate-500 dark:text-slate-400 font-normal">(RentaTeam, Redmadrobot, GrowApps)</span></div>
-                            </div>
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
-                                <span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full whitespace-nowrap print-light-pill">Jun 2014 – Feb 2017</span>
-                                <i id="icon-job5" class="accordion-icon fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 transform"></i>
-                            </div>
-                        </button>
-                        
-                        <div id="content-job5" class="accordion-content hidden px-5 pb-5 print:p-0">
-                            <div class="pt-3 print:pt-1 border-t border-slate-100 dark:border-slate-700 print:border-none">
-                                <ul class="space-y-2 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0 mt-3 print:mt-1.5">
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
-                                    <li class="relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-slate-400 before:font-bold">Developed scalable backend architectures using Python and Golang.</li>
-                                </ul>
+                        <!-- Job 5 -->
+                        <div class="job-card relative group/card border border-slate-200/60 dark:border-slate-700 print:border-none rounded-2xl print:rounded-none bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 print-bg-transparent avoid-break shadow-sm hover:shadow-md" data-techs="Java,Kotlin,Swift,Python,Golang">
+                            <div class="absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 ring-4 ring-slate-50 dark:ring-slate-900 print:hidden z-10 transition-all duration-300 group-hover/card:border-blue-500 group-hover/card:bg-blue-50 dark:group-hover/card:bg-blue-900/30 group-hover/card:scale-110"></div>
+                            
+                            <button onclick="toggleAccordion('job5')" class="accordion-header w-full text-left px-5 py-5 print:p-0 flex flex-col sm:flex-row sm:justify-between sm:items-start transition-colors print:bg-transparent group cursor-pointer rounded-t-2xl">
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Senior Mobile & Backend Developer</h4>
+                                    <div class="mt-1.5 print:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">Various Companies</span>
+                                        <span class="text-slate-300 dark:text-slate-600 text-[10px]">•</span>
+                                        <span class="text-slate-500 dark:text-slate-400 font-medium text-xs">RentaTeam, Redmadrobot, GrowApps</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-3 sm:mt-0 gap-4">
+                                    <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg whitespace-nowrap print-light-pill border border-slate-200 dark:border-slate-600">Jun 2014 – Feb 2017</span>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                                        <i id="icon-job5" class="accordion-icon fa-solid fa-chevron-down text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform duration-300 transform"></i>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <div id="content-job5" class="accordion-content hidden px-5 pb-6 print:p-0">
+                                <div class="pt-4 print:pt-1 border-t border-slate-100 dark:border-slate-700/50 print:border-none">
+                                    <ul class="space-y-3 print:space-y-1 text-sm text-slate-700 dark:text-slate-300 list-none ml-0 pl-0 mt-3 print:mt-1.5">
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-slate-400 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">Progressed from an Android Intern to a Senior Developer, building mobile applications for banks, video streaming platforms, and utility services using Java, Kotlin, and Swift.</li>
+                                        <li class="relative pl-5 before:content-['▹'] before:absolute before:left-0 before:text-slate-400 before:font-bold before:text-lg before:-top-1 hover:text-slate-900 dark:hover:text-white transition-colors">Developed scalable backend architectures using Python and Golang.</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </section>
             </div>
 
             <!-- ПРАВАЯ КОЛОНКА (1/3 ширины) - Скиллы, Образование, Награды -->
-            <div class="space-y-6 print:space-y-4 print-col-right animate-fade-in delay-300">
+            <div class="space-y-6 md:space-y-8 print:space-y-4 print-col-right animate-fade-in delay-300">
                 
                 <!-- CORE COMPETENCIES -->
-                <section class="bg-slate-800 text-white rounded-2xl shadow-sm p-8 print-shadow-none print:text-slate-900 print-bg-transparent avoid-break border border-transparent dark:border-slate-700">
-                    <h3 class="text-lg font-bold border-b-2 border-slate-600 dark:border-slate-700 print:border-slate-100 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-blue-400 print:text-blue-500"></i> Core Competencies
+                <section class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl shadow-lg shadow-slate-900/10 p-8 print-shadow-none print:bg-transparent print:text-slate-900 avoid-break border border-slate-700 print:border-none relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none no-print transition-transform duration-700 group-hover:scale-150"></div>
+
+                    <h3 class="text-xl font-bold border-b-2 border-slate-700 print:border-slate-100 pb-3 mb-6 print:mb-3 uppercase tracking-wide text-sm flex items-center gap-3 relative z-10">
+                        <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-500/20 print:bg-transparent print:w-auto print:h-auto flex items-center justify-center text-blue-400 print:text-blue-500 transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                            <i class="fa-solid fa-layer-group relative z-10"></i>
+                        </div>
+                        Core Competencies
                     </h3>
                     
-                    <div class="space-y-4 print:space-y-3">
-                        <div>
-                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Executive & Leadership</h4>
-                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Tech Strategy, Cross-functional Team Building (Team of 20+), Budgeting & FinOps, Agile/Scrum, Product Ownership (PO), Business & Systems Analysis, Technical Project Management.</p>
+                    <div id="competencies-container" class="flex flex-col gap-5 print:gap-3 relative z-10">
+                        
+                        <div id="comp-leadership" class="comp-item opacity-100 group/comp">
+                            <h4 class="font-bold text-blue-400 print:text-blue-600 text-sm mb-1.5 flex items-center gap-2"><i class="fa-solid fa-users text-xs opacity-70 transition-all duration-300 group-hover/comp:scale-125 group-hover/comp:opacity-100 group-hover/comp:text-white group-hover/comp:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"></i> Executive & Leadership</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Tech Strategy, Scaling Cross-functional Teams, Budgeting & FinOps, Agile/Scrum, Engineering Culture.</p>
                         </div>
-                        <div>
-                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Architecture & FinTech</h4>
-                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">CEX & Crypto Payment Processing, Proprietary AML Blockchain Systems & Risk-Scoring Engines, Fiat-to-Crypto Bridges, Smart Contracts, Real-Time Node Monitoring & Transaction Processing.</p>
+                        
+                        <div id="comp-arch" class="comp-item opacity-100 group/comp">
+                            <h4 class="font-bold text-blue-400 print:text-blue-600 text-sm mb-1.5 flex items-center gap-2"><i class="fa-solid fa-building-columns text-xs opacity-70 transition-all duration-300 group-hover/comp:scale-125 group-hover/comp:opacity-100 group-hover/comp:text-white group-hover/comp:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"></i> Architecture & FinTech</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">CEX & Crypto Payment Processing, Proprietary AML Blockchain Systems & Risk-Scoring Engines, Fiat-to-Crypto Bridges, Smart Contracts, Real-Time Node Monitoring & Transaction Processing.</p>
                         </div>
-                        <div>
-                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">Information Security & Infrastructure</h4>
-                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Secure Architecture Design, Digital Asset Protection, Penetration Testing Management, Vulnerability Assessment, AWS / GCP, Docker, Kubernetes, CI/CD pipelines.</p>
+
+                        <div id="comp-po" class="comp-item opacity-60 grayscale-[30%] group/comp">
+                            <h4 class="font-bold text-blue-400 print:text-blue-600 text-sm mb-1.5 flex items-center gap-2"><i class="fa-solid fa-list-check text-xs opacity-70 transition-all duration-300 group-hover/comp:scale-125 group-hover/comp:opacity-100 group-hover/comp:text-white group-hover/comp:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"></i> Product Management</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">End-to-end Product Lifecycle, Feature Prioritization, AI-Accelerated Business & Systems Analysis, Architecture Design, SDLC Optimization.</p>
                         </div>
-                        <div>
-                            <h4 class="font-semibold text-blue-300 dark:text-blue-400 print:text-blue-600 text-sm mb-1">AI & Emerging Tech</h4>
-                            <p class="text-sm text-slate-300 dark:text-slate-400 print:text-slate-700 leading-relaxed">Generative AI (Gemini) for Systems Architecture & SDLC Acceleration, Video/Voice Synthesis (GANs, Autoencoders), Prompt Engineering, Messenger-based AI CRM Platforms.</p>
+                        
+                        <div id="comp-infosec" class="comp-item opacity-60 grayscale-[30%] group/comp">
+                            <h4 class="font-bold text-blue-400 print:text-blue-600 text-sm mb-1.5 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-xs opacity-70 transition-all duration-300 group-hover/comp:scale-125 group-hover/comp:opacity-100 group-hover/comp:text-white group-hover/comp:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"></i> InfoSec & Infrastructure</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Secure Architecture Design, Digital Asset Protection, Penetration Testing pipelines, Blockchain AML Risk-Scoring Engines, AWS/GCP, Kubernetes.</p>
+                        </div>
+                        
+                        <div id="comp-ai" class="comp-item opacity-60 grayscale-[30%] group/comp">
+                            <h4 class="font-bold text-blue-400 print:text-blue-600 text-sm mb-1.5 flex items-center gap-2"><i class="fa-solid fa-microchip text-xs opacity-70 transition-all duration-300 group-hover/comp:scale-125 group-hover/comp:opacity-100 group-hover/comp:text-white group-hover/comp:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"></i> AI & Emerging Tech</h4>
+                            <p class="text-sm text-slate-300 print:text-slate-700 leading-relaxed">Generative AI (Gemini) for Systems Architecture & SDLC Acceleration, Video/Voice Synthesis (GANs, Autoencoders), Prompt Engineering, Messenger-based AI CRM Platforms.</p>
                         </div>
                     </div>
                 </section>
 
                 <!-- TECH STACK (Интерактивный) -->
-                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
-                    <div class="flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-5 print:mb-3">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-wider text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-code text-blue-500"></i> Tech Stack
+                <section class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 print-shadow-none print-bg-transparent avoid-break group">
+                    <div class="flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-6 print:mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wide text-sm flex items-center gap-3">
+                            <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                                <i class="fa-solid fa-code relative z-10"></i>
+                            </div>
+                            Tech Stack
                         </h3>
-                        <span class="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest no-print">Click to filter</span>
+                        <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-1 rounded-md font-semibold uppercase tracking-widest no-print">Click to filter</span>
                     </div>
                     
                     <div class="flex flex-wrap gap-2 print:gap-1" id="tech-filters">
-                        <button onclick="toggleTech('Python')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Python</button>
-                        <button onclick="toggleTech('Golang')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Golang</button>
-                        <button onclick="toggleTech('PostgreSQL')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">PostgreSQL</button>
-                        <button onclick="toggleTech('Kafka')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Kafka</button>
-                        <button onclick="toggleTech('Solidity')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Solidity</button>
-                        <button onclick="toggleTech('Web3')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Web3</button>
-                        <button onclick="toggleTech('Java')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Java</button>
-                        <button onclick="toggleTech('Kotlin')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Kotlin</button>
-                        <button onclick="toggleTech('Swift')" class="tech-btn px-3 py-1 print:px-2 print:py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-md font-semibold border border-slate-200 dark:border-slate-600 transition-all cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-600 print-light-pill">Swift</button>
+                        <!-- Немного усилил всплытие (hover:-translate-y-1 вместо 0.5) -->
+                        <button onclick="toggleTech('Python')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Python</button>
+                        <button onclick="toggleTech('Golang')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Golang</button>
+                        <button onclick="toggleTech('PostgreSQL')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">PostgreSQL</button>
+                        <button onclick="toggleTech('Kafka')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Kafka</button>
+                        <button onclick="toggleTech('Solidity')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Solidity</button>
+                        <button onclick="toggleTech('Web3')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Web3</button>
+                        <button onclick="toggleTech('Java')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Java</button>
+                        <button onclick="toggleTech('Kotlin')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Kotlin</button>
+                        <button onclick="toggleTech('Swift')" class="tech-btn px-4 py-1.5 print:px-2 print:py-0.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-bold shadow-sm border border-slate-200/80 dark:border-slate-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer print-light-pill">Swift</button>
                     </div>
                 </section>
 
                 <!-- AWARDS -->
-                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-5 print:mb-3 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-trophy text-blue-500"></i> Awards
+                <section class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 print-shadow-none print-bg-transparent avoid-break group">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-6 print:mb-3 uppercase tracking-wide text-sm flex items-center gap-3">
+                        <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-500/20 flex items-center justify-center text-yellow-600 dark:text-yellow-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                            <i class="fa-solid fa-trophy relative z-10"></i>
+                        </div>
+                        Awards
                     </h3>
-                    <ul class="space-y-3 print:space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Winner:</strong> TRON Grand Hackathon 2024</div>
+                    <ul class="space-y-4 print:space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <!-- Добавлена анимация свечения (glow) медалей вместо вращения -->
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-medal text-yellow-500 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Winner:</strong> TRON Grand Hackathon 2024</div>
                         </li>
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-medal text-yellow-500 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Winner:</strong> "Leaders of Digital 2021" (AI Track)</div>
                         </li>
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-medal text-yellow-500 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Winner:</strong> Top Blockchain Startup 2021 (NEAR track)</div>
                         </li>
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-medal text-yellow-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-medal text-yellow-500 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:drop-shadow-[0_0_8px_rgba(234,179,8,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Winner:</strong> Intel® IoT Roadshow Hackathon 2021</div>
                         </li>
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-globe text-blue-500 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Guinness Record:</strong> "Leaders of Digital 2019"</div>
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-globe text-blue-500 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:drop-shadow-[0_0_8px_rgba(59,130,246,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Guinness Record:</strong> "Leaders of Digital 2019"</div>
                         </li>
-                        <li class="flex items-start gap-3 print:gap-2">
-                            <i class="fa-solid fa-star text-slate-400 mt-0.5"></i> 
-                            <div><strong class="dark:text-white print:text-black">Top Placements:</strong> AngelHack (2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (2016).</div>
+                        <li class="flex items-start gap-3 print:gap-2 group/award cursor-default hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <div class="mt-0.5 w-5 flex justify-center"><i class="fa-solid fa-star text-slate-400 text-lg transition-all duration-300 group-hover/award:scale-125 group-hover/award:text-yellow-400 group-hover/award:drop-shadow-[0_0_8px_rgba(250,204,21,0.7)]"></i></div> 
+                            <div><strong class="text-slate-900 dark:text-white print:text-black">Top Placements:</strong> AngelHack (2018), DigitalHealth (2018), Crypto Bazar (2018), Junction Hackathon (2016).</div>
                         </li>
                     </ul>
                 </section>
 
                 <!-- EDUCATION & LANGUAGES -->
-                <section class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 print-shadow-none print-bg-transparent avoid-break">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-graduation-cap text-blue-500"></i> Education
+                <section class="glass-card rounded-3xl shadow-sm border border-white/40 dark:border-slate-700/50 p-8 print-shadow-none print-bg-transparent avoid-break group">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-5 print:mb-2 uppercase tracking-wide text-sm flex items-center gap-3">
+                        <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                            <i class="fa-solid fa-graduation-cap relative z-10"></i>
+                        </div>
+                        Education
                     </h3>
-                    <div class="mb-6 print:mb-4">
-                        <h4 class="font-bold text-slate-800 dark:text-white print:text-black text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
-                        <p class="text-slate-600 dark:text-slate-400 text-xs mt-1 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
-                        <p class="text-slate-500 dark:text-slate-500 text-xs mt-1">2011 – 2015</p>
+                    <div class="mb-8 print:mb-4 transition-transform duration-300 hover:translate-x-1">
+                        <h4 class="font-bold text-slate-900 dark:text-white print:text-black text-sm">Bachelor's in Applied Mathematics and Computer Science</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs mt-1.5 leading-snug">National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)</p>
+                        <p class="text-slate-500 dark:text-slate-500 font-medium text-xs mt-2 bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded print:bg-transparent print:p-0">2011 – 2015</p>
                     </div>
 
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700 pb-2 mb-4 print:mb-2 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-language text-blue-500"></i> Languages
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white border-b-2 border-slate-100 dark:border-slate-700/50 pb-3 mb-5 print:mb-2 uppercase tracking-wide text-sm flex items-center gap-3 group/lang">
+                        <div class="relative overflow-hidden w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 print:bg-transparent print:w-auto print:h-auto transition-transform duration-300 group-hover/lang:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/80 dark:via-white/20 to-transparent -translate-x-[150%] group-hover/lang:translate-x-[150%] transition-transform duration-700 ease-in-out print:hidden"></div>
+                            <i class="fa-solid fa-language relative z-10"></i>
+                        </div>
+                        Languages
                     </h3>
-                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300 mb-2 print:mb-1">
-                        <span class="font-semibold">English</span>
-                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs print-light-pill">Full Professional (B2/C1)</span>
+                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300 mb-3 print:mb-1 transition-transform duration-300 hover:translate-x-1 cursor-default">
+                        <span class="font-bold">English</span>
+                        <span class="text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg text-xs font-semibold print-light-pill transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/30">Full Professional (B2/C1)</span>
                     </div>
-                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300">
-                        <span class="font-semibold">Russian</span>
-                        <span class="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs print-light-pill">Native</span>
+                    <div class="flex justify-between items-center text-sm text-slate-700 dark:text-slate-300 transition-transform duration-300 hover:translate-x-1 cursor-default">
+                        <span class="font-bold">Russian</span>
+                        <span class="text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg text-xs font-semibold print-light-pill transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/30">Native</span>
                     </div>
                 </section>
 
@@ -412,7 +611,6 @@
     <!-- JavaScript логика -->
     <script>
         // 1. Темная Тема
-        // Проверяем сохраненную тему или системные настройки
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -429,7 +627,7 @@
             }
         }
 
-        // Фикс для печати: принудительно отключаем темную тему прямо перед печатью и возвращаем после
+        // Фикс для печати
         let wasDarkMode = false;
         window.addEventListener('beforeprint', () => {
             wasDarkMode = document.documentElement.classList.contains('dark');
@@ -443,7 +641,86 @@
             }
         });
 
-        // 2. Аккордеон опыта работы
+        // 2. ДИНАМИЧЕСКИЙ ФОКУС РЕЗЮМЕ ЧЕРЕЗ URL
+        function setFocus(role, isInitialLoad = false) {
+            const subtitle = document.getElementById('dynamic-subtitle');
+            
+            const executeChanges = () => {
+                // Обновляем Summary
+                document.querySelectorAll('.summary-block').forEach(el => el.classList.add('hidden'));
+                const targetSummary = document.getElementById(`summary-${role}`) || document.getElementById('summary-cto');
+                targetSummary.classList.remove('hidden');
+
+                // Пересобираем порядок компетенций и выделяем главные
+                const container = document.getElementById('competencies-container');
+                const comps = {
+                    'leadership': document.getElementById('comp-leadership'),
+                    'arch': document.getElementById('comp-arch'),
+                    'po': document.getElementById('comp-po'),
+                    'infosec': document.getElementById('comp-infosec'),
+                    'ai': document.getElementById('comp-ai')
+                };
+
+                let order = [];
+                let highlights = [];
+
+                if (role === 'infosec') {
+                    subtitle.innerHTML = 'CTO & ARCHITECT <span class="text-slate-300 dark:text-slate-600 mx-2">|</span> FINTECH SECURITY & AML EXPERT';
+                    order = ['infosec', 'arch', 'leadership', 'ai', 'po'];
+                    highlights = ['infosec', 'arch'];
+                } else if (role === 'po') {
+                    subtitle.innerHTML = 'SENIOR PRODUCT OWNER <span class="text-slate-300 dark:text-slate-600 mx-2">|</span> TECHNICAL PRODUCT MANAGER';
+                    order = ['po', 'leadership', 'ai', 'arch', 'infosec'];
+                    highlights = ['po', 'leadership'];
+                } else {
+                    // По умолчанию (cto)
+                    subtitle.innerHTML = 'CHIEF TECHNOLOGY OFFICER (CTO) <span class="text-slate-300 dark:text-slate-600 mx-2">|</span> LEAD SOLUTIONS ARCHITECT';
+                    order = ['leadership', 'arch', 'infosec', 'po', 'ai'];
+                    highlights = ['leadership', 'arch'];
+                }
+
+                // Физически меняем порядок в DOM
+                order.forEach(key => {
+                    const el = comps[key];
+                    if (el) {
+                        container.appendChild(el); 
+                        
+                        if (highlights.includes(key)) {
+                            el.classList.remove('opacity-60', 'grayscale-[30%]');
+                            el.classList.add('opacity-100');
+                        } else {
+                            el.classList.add('opacity-60', 'grayscale-[30%]');
+                            el.classList.remove('opacity-100');
+                        }
+                    }
+                });
+
+                subtitle.style.opacity = 1;
+            };
+
+            if (isInitialLoad) {
+                // Выполняем мгновенно при загрузке, чтобы не было мерцания
+                executeChanges();
+            } else {
+                subtitle.style.opacity = 0;
+                setTimeout(executeChanges, 150);
+            }
+        }
+
+        // Запуск логики при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let role = urlParams.get('role');
+            
+            // Валидация роли, если передали мусор в URL - ставим cto
+            if (!['cto', 'infosec', 'po'].includes(role)) {
+                role = 'cto';
+            }
+            
+            setFocus(role, true);
+        });
+
+        // 3. Аккордеон опыта работы
         function toggleAccordion(jobId) {
             const content = document.getElementById(`content-${jobId}`);
             const icon = document.getElementById(`icon-${jobId}`);
@@ -465,33 +742,31 @@
         function toggleTech(techName) {
             const buttons = document.querySelectorAll('.tech-btn');
             
-            // Обработка кнопки
             buttons.forEach(btn => {
                 if (btn.innerText === techName) {
                     if (activeTechs.has(techName)) {
                         activeTechs.delete(techName);
                         // Снимаем активный стиль
-                        btn.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                        btn.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-500', 'text-white', 'dark:bg-blue-600', 'dark:text-white', 'border-transparent');
+                        btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200/80', 'dark:border-slate-600');
                     } else {
                         activeTechs.add(techName);
-                        // Добавляем активный стиль
-                        btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                        // Добавляем активный стиль (заливка цветом)
+                        btn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200/80', 'dark:border-slate-600');
+                        btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-500', 'text-white', 'dark:bg-blue-600', 'dark:text-white', 'border-transparent');
                     }
                 }
             });
 
-            // Обновление списка карточек опыта
             const jobs = document.querySelectorAll('.job-card');
             
             jobs.forEach(job => {
                 if (activeTechs.size === 0) {
-                    // Если фильтров нет - показываем всё
                     job.classList.remove('job-dimmed');
                     return;
                 }
 
                 const jobTechs = job.dataset.techs ? job.dataset.techs.split(',') : [];
-                // Проверяем, есть ли ХОТЯ БЫ ОДНА выбранная технология в этой работе
                 const hasMatch = Array.from(activeTechs).some(activeTech => jobTechs.includes(activeTech));
                 
                 if (hasMatch) {
